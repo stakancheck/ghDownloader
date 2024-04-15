@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  Download GitHub directories and files as ZIP
-// @icon
+// @iconURL      https://github.com/stakancheck/ghDownloader/blob/main/assets/icon_gh_downloader.png?raw=true
 // @author       Stakancheck
 // @match        https://github.com/*/*
 // @require      https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
@@ -11,7 +11,7 @@
 // ==/UserScript==
 
 
-// region checker
+// region cheker
 
 // https://github.com/facebook/react/tree/main/.circleci
 // https://github.com/facebook/react/tree/main/packages/react-client
@@ -38,29 +38,6 @@ const urlChecker = {isRepository, isFile, isDirectory};
 // endregion
 
 // region Utility
-
-function checkRes(res) {
-    if (res.status === 401) {
-        throw new Error("invalid token");
-    }
-
-    if (res.status === 403) {
-        throw new Error("rate limit exceeded");
-    }
-
-    if (res.status === 404) {
-        throw new Error("repo not found");
-    }
-
-    if (res.status === 404) {
-        throw new Error("repo not found, possible is private repo");
-    }
-
-    if (!res.ok) {
-        throw new Error(`Something went wrong: ${res.statusText}}`);
-    }
-}
-
 const saveFile = (blob, fileName) => {
     const a = document.createElement("a");
     document.body.appendChild(a);
@@ -101,6 +78,26 @@ const fetchFile = async (author, repoName, branch, rootDir, token) => {
         },
     });
 
+    if (res.status === 401) {
+        throw new Error("invalid token");
+    }
+
+    if (res.status === 403) {
+        throw new Error("rate limit exceeded");
+    }
+
+    if (res.status === 404 && token) {
+        throw new Error("repo not found");
+    }
+
+    if (res.status === 404 && !token) {
+        throw new Error("repo not found, posible is private repo");
+    }
+
+    if (!res.ok) {
+        throw new Error(`Something went wrong: ${res.statusText} | ${rootDir}`);
+    }
+
     return res.blob();
 };
 
@@ -123,7 +120,25 @@ const isPrivateRepo = async (author, repoName, token) => {
 
     const res = await fetch(`https://api.github.com/repos/${author}/${repoName}`, header);
 
-    checkRes(checkRes)
+    if (res.status === 401) {
+        throw new Error("invalid token");
+    }
+
+    if (res.status === 403) {
+        throw new Error("rate limit exceeded");
+    }
+
+    if (res.status === 404 && token) {
+        throw new Error("repo not found");
+    }
+
+    if (res.status === 404 && !token) {
+        throw new Error("repo not found, posible is private repo");
+    }
+
+    if (!res.ok) {
+        throw new Error(`Something went wrong: ${res.statusText} | ${repoName}`);
+    }
 
     const data = await res.json();
     return data.private;
