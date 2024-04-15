@@ -1,17 +1,20 @@
 // ==UserScript==
 // @name         GitHub Downloader
-// @namespace    http://tampermonkey.net/
+// @namespace    stakancheck
 // @version      1.0
 // @description  Download GitHub directories and files as ZIP
 // @iconURL      https://github.com/stakancheck/ghDownloader/blob/main/assets/icon_gh_downloader.png?raw=true
-// @author       Stakancheck
+// @author       Artem Sukhanov | Stakancheck
+// @source       https://github.com/stakancheck/ghDownloader/
+// @downloadURL  https://raw.githubusercontent.com/stakancheck/ghDownloader/main/script.js
+// @updateURL    https://raw.githubusercontent.com/stakancheck/ghDownloader/main/script.js
 // @match        https://github.com/*/*
 // @require      https://update.greasyfork.org/scripts/473358/1237031/JSZip.js
 // @grant        none
 // ==/UserScript==
 
 
-// region cheker
+// region checker
 
 // https://github.com/facebook/react/tree/main/.circleci
 // https://github.com/facebook/react/tree/main/packages/react-client
@@ -91,7 +94,7 @@ const fetchFile = async (author, repoName, branch, rootDir, token) => {
     }
 
     if (res.status === 404 && !token) {
-        throw new Error("repo not found, posible is private repo");
+        throw new Error("repo not found, possible is private repo");
     }
 
     if (!res.ok) {
@@ -133,7 +136,7 @@ const isPrivateRepo = async (author, repoName, token) => {
     }
 
     if (res.status === 404 && !token) {
-        throw new Error("repo not found, posible is private repo");
+        throw new Error("repo not found, possible is private repo");
     }
 
     if (!res.ok) {
