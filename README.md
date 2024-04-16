@@ -13,6 +13,9 @@
 Navigate to the repository, directory, or file page on GitHub. You will see a new "Download ZIP" button. Click on it to download the current directory or file.  
 ![usage.png](assets/usage.png)
 
+### Known issues
+Does not work with private repositories. The bug will be fixed.
+
 ### Limitations
 The script cannot download private repositories without an access token.
 The script cannot download files or directories that exceed GitHub's size limit.
